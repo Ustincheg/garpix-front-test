@@ -1,11 +1,10 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import styled from 'styled-components';
-import { Task } from '../types';
+import {store} from '../store'
 import TodoItem from './TodoItem';
 
-export interface TodoListProps {
-    todos: Task[];
-}
+
 
 const List = styled.ul`
     list-style-type: none;
@@ -14,14 +13,43 @@ const List = styled.ul`
     margin: 0 auto;
 `
 
-const TodoList: React.FC<TodoListProps> = ({todos}) => (
+const TodoList: React.FC = observer(() => (
     <List className="list-group">
+        <li className="list-group-item">
+            <select 
+                className="form-select" 
+                defaultValue={store.filterStatus}
+                onChange={
+                    (event) => store.filterStatus = Number(event.target.value)
+                }
+            >
+                <option value={0} key={0}>
+                    Все
+                </option>                                        
+                {
+                    store.statuses.map((status) => (
+                        <option value={status.id} key={status.id}>
+                            {status.title}
+                        </option>                        
+                    ))
+                }
+            </select>
+            <input 
+                type="text" 
+                className="form-control" 
+                defaultValue={store.filterSearch}
+                onChange={
+                    (event) => store.filterSearch = event.target.value
+                }
+            />
+        </li>
+
         {
-            todos.map((todo, index) => (
+            store.filteredTasks.map((todo, index) => (
                 <TodoItem key={todo.id} todo={todo} n={index+1} />
-            ))            
+            ))
         }
     </List>
-);
+));
 
 export default TodoList;

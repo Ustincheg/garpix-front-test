@@ -3,7 +3,7 @@ import TodoList from './TodoList';
 import {store} from '../store';
 import { observer } from 'mobx-react-lite';
 
-const App: React.FC = observer(
+const App: React.FC = (
   () => {
     useEffect(()=>{
       store.load();
@@ -11,7 +11,7 @@ const App: React.FC = observer(
 
     return (
       <div>
-        <TodoList todos={store.tasks} />
+        <TodoList/>
       </div>
     );
   }

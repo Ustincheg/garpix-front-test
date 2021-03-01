@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { store } from '../store';
 import { Task, TaskStatus } from '../types';
 
@@ -8,17 +8,22 @@ export interface TodoItemProps {
     n: number;
     todo: Task;
 }
-
-const Item = styled.li`
+export interface ItemProps {
+  darkTheme?: boolean;
+}
+const Item = styled.li<ItemProps>`
   display: flex;  
   justify-content: space-between;
   align-items: center;  
+  background-color: ${(props)=> props.darkTheme? "lightgray" : "white" };
+  ${(props)=> props.darkTheme && css`
+    &:hover{
+      background-color: gray;
+    }
+  `}
 `
 
-const TodoItem: React.FC<TodoItemProps> = observer(({n, todo: task}) => {
-  const modifyTitle = () => {
-    task.title += "!";
-  };
+const TodoItem: React.FC<TodoItemProps> = observer(({n, todo: task}) => {  
   const complete = () => {
     task.status = TaskStatus.completed;
   };
@@ -35,7 +40,7 @@ const TodoItem: React.FC<TodoItemProps> = observer(({n, todo: task}) => {
 
 
   return (
-    <Item className="list-group-item" onClick={modifyTitle} >
+    <Item darkTheme className="list-group-item">
         <strong>{n}</strong>
         <p>{task.title}</p>
         <span> Статус: {status?.title ?? "Не найден"}</span>
@@ -45,8 +50,7 @@ const TodoItem: React.FC<TodoItemProps> = observer(({n, todo: task}) => {
                 <span> {user.first_name} </span>
                 <span> {user.last_name} </span>
             </>    
-        }
-        <span> Выполнена </span>
+        }        
         { 
             task.status === TaskStatus.created &&
             <>

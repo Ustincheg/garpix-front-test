@@ -1,5 +1,5 @@
-import { observable, runInAction } from "mobx";
-import { StatusName, Task, User } from "./types";
+import { action, computed, observable, runInAction } from "mobx";
+import { StatusName, Task, TaskStatus, User } from "./types";
 
 
 const loadJSON = async (fileName: string) => {
@@ -11,15 +11,37 @@ const loadJSON = async (fileName: string) => {
 export class Store {
     @observable
     tasks: Task[];
+    @observable
     statuses: StatusName[];
     users: User[];
+    
+    @observable
+    filterStatus: 0 | TaskStatus;
+
+    @observable
+    filterSearch: string;
 
     constructor() {
         this.tasks = [];
         this.statuses = [];
-        this.users = [];            
+        this.users = [];
+        this.filterStatus = 0;
+        this.filterSearch = "";
     }
 
+    @computed
+    get filteredTasks() {
+        if (this.filterStatus || this.filterSearch) {
+            return this.tasks.filter((task) => (
+                (!this.filterStatus || task.status === this.filterStatus) && 
+                new RegExp(this.filterSearch, "i").test(task.title)
+            ));
+        }
+        return this.tasks;
+    }
+
+
+    // @action
     async load(){
         // const statusesResponse = await fetch("/files/statuses.json") ;
         // const statuses = await response.json();
