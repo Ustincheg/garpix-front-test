@@ -46,10 +46,10 @@ const TodoItem: React.FC<TodoItemProps> = observer(({n, todo: task}) => {
         <span> Статус: {status?.title ?? "Не найден"}</span>
         {
             user && 
-            <>    
+            <>
                 <span> {user.first_name} </span>
                 <span> {user.last_name} </span>
-            </>    
+            </>
         }        
         { 
             task.status === TaskStatus.created &&

@@ -19,6 +19,9 @@ export class Store {
     filterStatus: 0 | TaskStatus;
 
     @observable
+    filterName: number;
+
+    @observable
     filterSearch: string;
 
     constructor() {
@@ -27,14 +30,16 @@ export class Store {
         this.users = [];
         this.filterStatus = 0;
         this.filterSearch = "";
+        this.filterName = 0;
     }
 
     @computed
     get filteredTasks() {
-        if (this.filterStatus || this.filterSearch) {
+        if (this.filterStatus || this.filterSearch || this.filterName) {
             return this.tasks.filter((task) => (
                 (!this.filterStatus || task.status === this.filterStatus) && 
-                new RegExp(this.filterSearch, "i").test(task.title)
+                new RegExp(this.filterSearch, "i").test(task.title) &&                
+                (!this.filterName || task.contractor_id === this.filterName)
             ));
         }
         return this.tasks;

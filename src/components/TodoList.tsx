@@ -34,6 +34,24 @@ const TodoList: React.FC = observer(() => (
                     ))
                 }
             </select>
+            <select 
+                className="form-select" 
+                defaultValue={store.filterName }
+                onChange={
+                    (event) => store.filterName = Number(event.target.value)
+                }
+            >
+                <option value={"0"} key={0}>
+                    Все
+                </option>                                        
+                {
+                    store.users.map((user) => (
+                        <option value={user.id} key={user.id}>
+                            {user.first_name}{user.last_name}
+                        </option>                        
+                    ))
+                }
+            </select>
             <input 
                 type="text" 
                 className="form-control" 
